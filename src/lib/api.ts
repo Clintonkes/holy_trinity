@@ -40,20 +40,21 @@ async function postJson<T>(path: string, body: unknown): Promise<T> {
   return res.json();
 }
 
-export interface BookingPayload {
-  address: string;
-  name: string;
-  email: string;
+export interface AppointmentPayload {
+  first_name: string;
+  last_name: string;
   phone: string;
-  frequency?: string;
+  email?: string;
+  dob?: string;
+  department: string;
   preferred_date?: string;
   preferred_time?: string;
-  service?: string;
-  lawn_size?: string;
-  notes?: string;
+  visit_type?: string;
+  existing_patient?: string;
+  reason?: string;
 }
 
-export interface BookingResponse extends BookingPayload {
+export interface AppointmentResponse extends AppointmentPayload {
   id: number;
   reference: string;
   status: string;
@@ -61,8 +62,8 @@ export interface BookingResponse extends BookingPayload {
   updated_at: string;
 }
 
-export function createBooking(payload: BookingPayload): Promise<BookingResponse> {
-  return postJson<BookingResponse>('/api/bookings', payload);
+export function createAppointment(payload: AppointmentPayload): Promise<AppointmentResponse> {
+  return postJson<AppointmentResponse>('/api/appointments', payload);
 }
 
 export interface ContactPayload {
@@ -70,6 +71,7 @@ export interface ContactPayload {
   email: string;
   phone?: string;
   subject?: string;
+  category?: string;
   message: string;
 }
 

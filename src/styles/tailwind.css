@@ -3,24 +3,26 @@
 @tailwind utilities;
 
 :root {
-  --background: #F7F4EE;
-  --foreground: #1A1F0E;
-  --primary: #2D5016;
-  --primary-foreground: #F7F4EE;
-  --secondary: #EAE6DA;
-  --secondary-foreground: #1A1F0E;
-  --accent: #7A9A5C;
-  --accent-foreground: #1A1F0E;
-  --muted: #E2DDD3;
-  --muted-foreground: #5C5E50;
-  --card: #FDFBF7;
-  --card-foreground: #1A1F0E;
-  --border: #D4CFC3;
-  --input: #E8E4DB;
-  --ring: #2D5016;
-  --radius: 1rem;
-  --font-sans: var(--font-dm-sans), sans-serif;
-  --font-display: var(--font-fraunces), serif;
+  --background: #F0F4F8;
+  --foreground: #0B1F3A;
+  --primary: #0B1F3A;
+  --primary-foreground: #F8FAFB;
+  --secondary: #E4EDF5;
+  --secondary-foreground: #0B1F3A;
+  --accent: #0D7377;
+  --accent-foreground: #F8FAFB;
+  --gold: #C9A84C;
+  --gold-light: #F0E6C8;
+  --muted: #D6E2EE;
+  --muted-foreground: #4A6080;
+  --card: #FFFFFF;
+  --card-foreground: #0B1F3A;
+  --border: #C8D8E8;
+  --input: #E8F0F8;
+  --ring: #0D7377;
+  --radius: 0.75rem;
+  --font-sans: var(--font-plus-jakarta), sans-serif;
+  --font-display: var(--font-crimson), serif;
 }
 
 @layer base {
@@ -52,141 +54,164 @@
   }
 
   .text-hero {
-    font-size: clamp(3rem, 8vw, 7rem);
-    line-height: 0.95;
-    letter-spacing: -0.03em;
+    font-size: clamp(2.8rem, 7vw, 6rem);
+    line-height: 1.0;
+    letter-spacing: -0.02em;
   }
 
   .text-section-title {
-    font-size: clamp(2.2rem, 5vw, 4.5rem);
-    line-height: 1.05;
-    letter-spacing: -0.025em;
+    font-size: clamp(2rem, 4.5vw, 3.8rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
   }
 
   .text-card-title {
-    font-size: clamp(1.25rem, 2vw, 1.75rem);
-    line-height: 1.2;
+    font-size: clamp(1.2rem, 2vw, 1.6rem);
+    line-height: 1.25;
   }
 
+  /* Hospital-specific glass effects */
   .glass-card {
-    background: rgba(247, 244, 238, 0.72);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
   }
 
   .glass-nav {
-    background: rgba(247, 244, 238, 0.82);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.45);
+    background: rgba(11, 31, 58, 0.94);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(13, 115, 119, 0.3);
   }
 
-  .text-stroke-primary {
-    -webkit-text-stroke: 1.5px var(--primary);
-    color: transparent;
+  /* Medical cross pattern background */
+  .bg-medical-pattern {
+    background-image:
+      linear-gradient(to right, rgba(13, 115, 119, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(13, 115, 119, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
   }
 
-  .reveal {
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .reveal-hidden {
-    opacity: 0;
-    transform: translateY(32px);
-  }
-
+  /* Hero overlay for hospital */
   .bg-hero-overlay {
     background: linear-gradient(
-      to top,
-      rgba(26, 31, 14, 0.75) 0%,
-      rgba(26, 31, 14, 0.35) 45%,
-      rgba(26, 31, 14, 0.1) 100%
+      135deg,
+      rgba(11, 31, 58, 0.88) 0%,
+      rgba(11, 31, 58, 0.55) 50%,
+      rgba(13, 115, 119, 0.3) 100%
     );
   }
 
-  .bg-grid-subtle {
-    background-image:
-      linear-gradient(to right, rgba(45, 80, 22, 0.06) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(45, 80, 22, 0.06) 1px, transparent 1px);
-    background-size: 40px 40px;
+  /* Teal gradient strip */
+  .bg-teal-gradient {
+    background: linear-gradient(135deg, #0D7377 0%, #0a5a5e 100%);
   }
 
-  .service-card-hover {
+  /* Navy gradient */
+  .bg-navy-gradient {
+    background: linear-gradient(135deg, #0B1F3A 0%, #142d52 100%);
+  }
+
+  /* Gold accent line */
+  .gold-line {
+    display: block;
+    width: 3.5rem;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), #e8c76a);
+    border-radius: 2px;
+  }
+
+  /* Card hover for departments */
+  .dept-card-hover {
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
                 box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .service-card-hover:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 20px 60px rgba(45, 80, 22, 0.15);
+  .dept-card-hover:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 24px 64px rgba(11, 31, 58, 0.12);
   }
 
-  .gallery-overlay {
-    background: linear-gradient(
-      to top,
-      rgba(45, 80, 22, 0.85) 0%,
-      transparent 60%
-    );
-    opacity: 0;
-    transition: opacity 0.4s ease;
-  }
-
-  .gallery-item:hover .gallery-overlay {
+  /* Reveal animations */
+  .reveal {
     opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .gallery-item:hover img {
-    transform: scale(1.04);
+  .reveal-hidden {
+    opacity: 0;
+    transform: translateY(28px);
   }
 
-  .gallery-item img {
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Nav underline */
+  .nav-link-active {
+    color: var(--gold);
   }
 
-  .underline-grow {
+  .underline-teal {
     position: relative;
   }
 
-  .underline-grow::after {
+  .underline-teal::after {
     content: '';
     position: absolute;
     bottom: -2px;
     left: 0;
     width: 0;
     height: 2px;
-    background-color: var(--accent);
+    background-color: var(--gold);
     transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .underline-grow:hover::after {
+  .underline-teal:hover::after {
     width: 100%;
   }
 
+  /* Buttons */
   .btn-primary {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     padding: 0.875rem 2rem;
-    background-color: var(--primary);
-    color: var(--primary-foreground);
-    border-radius: 9999px;
+    background: linear-gradient(135deg, #0D7377 0%, #0a5a5e 100%);
+    color: #F8FAFB;
+    border-radius: 0.5rem;
     font-weight: 600;
     font-size: 0.9375rem;
-    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    letter-spacing: 0.01em;
   }
 
   .btn-primary:hover {
-    background-color: #3d6b1e;
-    transform: translateY(-1px);
-    box-shadow: 0 8px 30px rgba(45, 80, 22, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(13, 115, 119, 0.35);
+    opacity: 0.95;
   }
 
   .btn-primary:active {
     transform: translateY(0);
+  }
+
+  .btn-gold {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    background: linear-gradient(135deg, #C9A84C 0%, #b8943a 100%);
+    color: #0B1F3A;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    font-size: 0.9375rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    letter-spacing: 0.01em;
+  }
+
+  .btn-gold:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(201, 168, 76, 0.4);
   }
 
   .btn-outline {
@@ -197,15 +222,15 @@
     background-color: transparent;
     color: var(--foreground);
     border: 1.5px solid var(--border);
-    border-radius: 9999px;
+    border-radius: 0.5rem;
     font-weight: 600;
     font-size: 0.9375rem;
     transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
   }
 
   .btn-outline:hover {
-    border-color: var(--primary);
-    background-color: rgba(45, 80, 22, 0.06);
+    border-color: var(--accent);
+    background-color: rgba(13, 115, 119, 0.06);
     transform: translateY(-1px);
   }
 
@@ -215,25 +240,26 @@
     gap: 0.5rem;
     padding: 0.875rem 2rem;
     background-color: transparent;
-    color: var(--primary-foreground);
-    border: 1.5px solid rgba(247, 244, 238, 0.4);
-    border-radius: 9999px;
+    color: #F8FAFB;
+    border: 1.5px solid rgba(248, 250, 251, 0.4);
+    border-radius: 0.5rem;
     font-weight: 600;
     font-size: 0.9375rem;
     transition: border-color 0.2s ease, background-color 0.2s ease;
   }
 
   .btn-outline-white:hover {
-    border-color: rgba(247, 244, 238, 0.9);
-    background-color: rgba(247, 244, 238, 0.12);
+    border-color: rgba(248, 250, 251, 0.85);
+    background-color: rgba(248, 250, 251, 0.1);
   }
 
+  /* Form inputs */
   .input-field {
     width: 100%;
     padding: 0.875rem 1.125rem;
     background-color: var(--card);
     border: 1.5px solid var(--border);
-    border-radius: 0.75rem;
+    border-radius: 0.5rem;
     font-size: 0.9375rem;
     color: var(--foreground);
     font-family: var(--font-sans);
@@ -243,24 +269,71 @@
 
   .input-field:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(122, 154, 92, 0.15);
+    box-shadow: 0 0 0 3px rgba(13, 115, 119, 0.12);
   }
 
   .input-field::placeholder {
     color: var(--muted-foreground);
   }
 
-  .blob-accent {
-    background: radial-gradient(ellipse at center, rgba(122, 154, 92, 0.18) 0%, transparent 70%);
-    filter: blur(40px);
+  /* Stat card */
+  .stat-card {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    text-align: center;
   }
 
-  .blob-primary {
-    background: radial-gradient(ellipse at center, rgba(45, 80, 22, 0.12) 0%, transparent 70%);
-    filter: blur(60px);
+  /* Section divider */
+  .section-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
   }
 
-  .mobile-menu-open {
-    overflow: hidden;
+  /* Pulse dot for emergency */
+  .pulse-dot {
+    width: 10px;
+    height: 10px;
+    background: #22c55e;
+    border-radius: 50%;
+    animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
   }
+
+  @keyframes pulse-ring {
+    0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5); }
+    70% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+  }
+
+  /* Floating animation */
+  @keyframes float-gentle {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .float-gentle {
+    animation: float-gentle 4s ease-in-out infinite;
+  }
+
+  /* Shimmer for loading states */
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  /* Medical cross icon */
+  .medical-cross {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Stagger animation delays */
+  .stagger-1 { animation-delay: 0.1s; }
+  .stagger-2 { animation-delay: 0.2s; }
+  .stagger-3 { animation-delay: 0.3s; }
+  .stagger-4 { animation-delay: 0.4s; }
 }

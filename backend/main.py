@@ -7,19 +7,19 @@ import random
 import string
 import os
 
-from database import init_db, get_db, Booking, Contact, Admin
+from database import init_db, get_db, Appointment, Contact, Admin
 from schemas import (
-    BookingCreate, BookingResponse, BookingStatusUpdate,
+    AppointmentCreate, AppointmentResponse, AppointmentStatusUpdate,
     ContactCreate, ContactResponse, ContactStatusUpdate,
     AdminLogin, Token,
 )
 from auth import verify_password, get_password_hash, create_access_token, get_current_admin
 from email_service import (
-    send_email, booking_confirmation_html, booking_status_html,
+    send_email, appointment_confirmation_html, appointment_status_html,
     contact_confirmation_html, contact_admin_notification_html,
 )
 
-app = FastAPI(title="Stel LLC API", version="1.0.0")
+app = FastAPI(title="Holy Trinity Hospital API", version="1.0.0")
 
 origins = [
     "http://localhost:5173",
@@ -29,6 +29,9 @@ origins = [
     "http://127.0.0.1:4028",
     "https://clintonkes.github.io",
 ]
+site_url = os.getenv("NEXT_PUBLIC_SITE_URL")
+if site_url:
+    origins.append(site_url)
 render_url = os.getenv("RENDER_EXTERNAL_URL")
 if render_url:
     origins.append(render_url)
@@ -57,7 +60,7 @@ def _seed_admin():
         # guessable default.
         return
 
-    admin_email = os.getenv("ADMIN_EMAIL", "stelllc1@proton.me")
+    admin_email = os.getenv("ADMIN_EMAIL", "hr@holytrinityhospital.ng")
     db = SessionLocal()
     try:
         existing = db.query(Admin).first()
@@ -77,47 +80,48 @@ def _seed_admin():
 def _generate_reference():
     ts = str(int(time.time()))[-6:]
     rand = "".join(random.choices(string.digits, k=3))
-    return f"STEL-{ts}{rand}"
+    return f"HTH-{ts}{rand}"
 
 
 # ── Public Endpoints ──────────────────────────────────────────────
 
-@app.post("/api/bookings", response_model=BookingResponse, status_code=201)
-def create_booking(data: BookingCreate, db: Session = Depends(get_db)):
+@app.post("/api/appointments", response_model=AppointmentResponse, status_code=201)
+def create_appointment(data: AppointmentCreate, db: Session = Depends(get_db)):
     reference = _generate_reference()
-    booking = Booking(
+    appointment = Appointment(
         reference=reference,
-        address=data.address,
-        frequency=data.frequency,
-        name=data.name,
-        email=data.email,
+        first_name=data.first_name,
+        last_name=data.last_name,
         phone=data.phone,
+        email=data.email,
+        dob=data.dob,
+        department=data.department,
         preferred_date=data.preferred_date,
         preferred_time=data.preferred_time,
-        service=data.service,
-        lawn_size=data.lawn_size,
-        notes=data.notes,
+        visit_type=data.visit_type,
+        existing_patient=data.existing_patient,
+        reason=data.reason,
         status="pending",
     )
-    db.add(booking)
+    db.add(appointment)
     db.commit()
-    db.refresh(booking)
+    db.refresh(appointment)
 
-    send_email(
-        to_email=data.email,
-        subject=f"Your Stel LLC Service Request {reference}",
-        html_body=booking_confirmation_html(
-            name=data.name,
-            reference=reference,
-            address=data.address,
-            service=data.service,
-            frequency=data.frequency,
-            preferred_date=data.preferred_date,
-            preferred_time=data.preferred_time,
-        ),
-    )
+    if data.email:
+        send_email(
+            to_email=data.email,
+            subject=f"Your Holy Trinity Hospital Appointment Request {reference}",
+            html_body=appointment_confirmation_html(
+                name=data.first_name,
+                reference=reference,
+                department=data.department,
+                visit_type=data.visit_type,
+                preferred_date=data.preferred_date,
+                preferred_time=data.preferred_time,
+            ),
+        )
 
-    return booking
+    return appointment
 
 
 @app.post("/api/contacts", response_model=ContactResponse, status_code=201)
@@ -127,6 +131,7 @@ def create_contact(data: ContactCreate, db: Session = Depends(get_db)):
         email=data.email,
         phone=data.phone,
         subject=data.subject,
+        category=data.category,
         message=data.message,
         status="new",
     )
@@ -136,7 +141,7 @@ def create_contact(data: ContactCreate, db: Session = Depends(get_db)):
 
     send_email(
         to_email=data.email,
-        subject="Thank you for contacting Stel LLC",
+        subject="Thank you for contacting Holy Trinity Hospital",
         html_body=contact_confirmation_html(
             name=data.name,
             subject=data.subject,
@@ -144,7 +149,7 @@ def create_contact(data: ContactCreate, db: Session = Depends(get_db)):
         ),
     )
 
-    admin_email = os.getenv("ADMIN_EMAIL", "stelllc1@proton.me")
+    admin_email = os.getenv("ADMIN_EMAIL", "hr@holytrinityhospital.ng")
     send_email(
         to_email=admin_email,
         subject=f"New Contact: {data.subject or 'No subject'}",
@@ -175,45 +180,46 @@ def admin_login(data: AdminLogin, db: Session = Depends(get_db)):
 
 # ── Admin Endpoints ───────────────────────────────────────────────
 
-@app.get("/api/admin/bookings", response_model=list[BookingResponse])
-def list_bookings(
+@app.get("/api/admin/appointments", response_model=list[AppointmentResponse])
+def list_appointments(
     db: Session = Depends(get_db),
     admin: Admin = Depends(get_current_admin),
 ):
-    return db.query(Booking).order_by(Booking.created_at.desc()).all()
+    return db.query(Appointment).order_by(Appointment.created_at.desc()).all()
 
 
-@app.patch("/api/admin/bookings/{booking_id}", response_model=BookingResponse)
-def update_booking_status(
-    booking_id: int,
-    data: BookingStatusUpdate,
+@app.patch("/api/admin/appointments/{appointment_id}", response_model=AppointmentResponse)
+def update_appointment_status(
+    appointment_id: int,
+    data: AppointmentStatusUpdate,
     db: Session = Depends(get_db),
     admin: Admin = Depends(get_current_admin),
 ):
     if data.status not in ("pending", "confirmed", "approved", "cancelled", "completed"):
         raise HTTPException(status_code=400, detail="Invalid status")
 
-    booking = db.query(Booking).filter(Booking.id == booking_id).first()
-    if not booking:
-        raise HTTPException(status_code=404, detail="Booking not found")
+    appointment = db.query(Appointment).filter(Appointment.id == appointment_id).first()
+    if not appointment:
+        raise HTTPException(status_code=404, detail="Appointment not found")
 
-    booking.status = data.status
-    booking.updated_at = datetime.now(timezone.utc)
+    appointment.status = data.status
+    appointment.updated_at = datetime.now(timezone.utc)
     db.commit()
-    db.refresh(booking)
+    db.refresh(appointment)
 
-    send_email(
-        to_email=booking.email,
-        subject=f"Stel LLC Service Update: {booking.reference}",
-        html_body=booking_status_html(
-            name=booking.name,
-            reference=booking.reference,
-            status=data.status,
-            address=booking.address,
-        ),
-    )
+    if appointment.email:
+        send_email(
+            to_email=appointment.email,
+            subject=f"Holy Trinity Hospital Appointment Update: {appointment.reference}",
+            html_body=appointment_status_html(
+                name=appointment.first_name,
+                reference=appointment.reference,
+                status=data.status,
+                department=appointment.department,
+            ),
+        )
 
-    return booking
+    return appointment
 
 
 @app.get("/api/admin/contacts", response_model=list[ContactResponse])
@@ -249,18 +255,18 @@ def update_contact_status(
     return contact
 
 
-@app.delete("/api/admin/bookings/{booking_id}")
-def delete_booking(
-    booking_id: int,
+@app.delete("/api/admin/appointments/{appointment_id}")
+def delete_appointment(
+    appointment_id: int,
     db: Session = Depends(get_db),
     admin: Admin = Depends(get_current_admin),
 ):
-    booking = db.query(Booking).filter(Booking.id == booking_id).first()
-    if not booking:
-        raise HTTPException(status_code=404, detail="Booking not found")
-    db.delete(booking)
+    appointment = db.query(Appointment).filter(Appointment.id == appointment_id).first()
+    if not appointment:
+        raise HTTPException(status_code=404, detail="Appointment not found")
+    db.delete(appointment)
     db.commit()
-    return {"detail": "Booking deleted"}
+    return {"detail": "Appointment deleted"}
 
 
 @app.delete("/api/admin/contacts/{contact_id}")
@@ -282,14 +288,14 @@ def dashboard_stats(
     db: Session = Depends(get_db),
     admin: Admin = Depends(get_current_admin),
 ):
-    total = db.query(Booking).count()
-    pending = db.query(Booking).filter(Booking.status == "pending").count()
-    approved = db.query(Booking).filter(Booking.status == "approved").count()
-    completed = db.query(Booking).filter(Booking.status == "completed").count()
-    cancelled = db.query(Booking).filter(Booking.status == "cancelled").count()
+    total = db.query(Appointment).count()
+    pending = db.query(Appointment).filter(Appointment.status == "pending").count()
+    approved = db.query(Appointment).filter(Appointment.status == "approved").count()
+    completed = db.query(Appointment).filter(Appointment.status == "completed").count()
+    cancelled = db.query(Appointment).filter(Appointment.status == "cancelled").count()
     contacts = db.query(Contact).count()
     return {
-        "total_bookings": total,
+        "total_appointments": total,
         "pending": pending,
         "approved": approved,
         "completed": completed,

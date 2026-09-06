@@ -3,41 +3,34 @@
 import React, { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import AppIcon from '@/components/ui/AppIcon';
+import Icon from '@/components/ui/AppIcon';
 import Link from 'next/link';
 import { createContact, ApiError } from '@/lib/api';
 
-interface FormState {
+interface ContactForm {
   name: string;
-  email: string;
   phone: string;
+  email: string;
   subject: string;
+  category: string;
   message: string;
 }
 
-const subjects = [
-  'General Inquiry',
-  'Schedule a Service',
-  'Feedback',
-  'Other',
-];
-
 export default function ContactPage() {
-  const [form, setForm] = useState<FormState>({
+  const [form, setForm] = useState<ContactForm>({
     name: '',
-    email: '',
     phone: '',
+    email: '',
     subject: '',
+    category: 'general',
     message: '',
   });
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -50,6 +43,7 @@ export default function ContactPage() {
         email: form.email,
         phone: form.phone || undefined,
         subject: form.subject || undefined,
+        category: form.category || undefined,
         message: form.message,
       });
       setSubmitted(true);
@@ -63,270 +57,222 @@ export default function ContactPage() {
   return (
     <>
       <Header />
-      <main className="pt-28">
+      <main>
         {/* Hero */}
-        <section className="relative overflow-hidden bg-foreground py-20 md:py-24">
-          <div className="absolute inset-0 bg-grid-subtle opacity-20" />
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
-            <div className="max-w-2xl">
-              <span className="inline-block text-accent text-sm font-semibold tracking-widest uppercase mb-4">
-                Reach Out
-              </span>
-              <h1 className="font-display font-bold text-section-title text-primary-foreground mb-5">
-                Get In Touch
-              </h1>
-              <p className="text-xl text-primary-foreground/70 leading-relaxed">
-                Have a question, want to schedule a service, or just want to say hello? We&apos;d love to hear from you.
-              </p>
-              <p className="mt-4 text-primary-foreground/50 text-sm">
-                Looking for a price estimate?{' '}
-                <Link href="/quote" className="text-accent underline hover:text-accent/80 transition-colors">
-                  Use our Quote Request form instead →
-                </Link>
-              </p>
+        <section className="bg-[#0B1F3A] py-20 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute bottom-0 left-0 w-80 h-80 rounded-full bg-[#C9A84C] blur-3xl" />
+          </div>
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="flex items-center gap-3 mb-5">
+              <span className="gold-line"></span>
+              <span className="text-xs font-semibold uppercase tracking-widest text-[#C9A84C]">Contact Us</span>
+            </div>
+            <h1 className="font-display text-section-title text-[#F8FAFB] mb-4">
+              Get in Touch<br />
+              <span className="italic text-[#C9A84C]">We're Here to Help</span>
+            </h1>
+            <p className="text-[rgba(248,250,251,0.7)] max-w-lg leading-relaxed">
+              Have a question, feedback, or need general information? Send us a message and our team will respond promptly.
+            </p>
+            <div className="mt-6 inline-flex items-center gap-2 bg-[rgba(201,168,76,0.15)] border border-[rgba(201,168,76,0.3)] rounded-lg px-4 py-2.5 text-sm text-[#C9A84C]">
+              <Icon name="CalendarDaysIcon" size={16} />
+              <span>Need to schedule a visit? Use our </span>
+              <Link href="/appointments" className="underline font-semibold hover:text-[#e8c76a] transition-colors">Appointments page</Link>
+              <span> instead.</span>
             </div>
           </div>
         </section>
 
-        {/* Main Content */}
-        <section className="py-20 md:py-28">
+        {/* Contact grid */}
+        <section className="py-16 bg-[#F0F4F8]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <div className="grid lg:grid-cols-5 gap-14 items-start">
-              {/* Form — 3 cols */}
-              <div className="lg:col-span-3">
-                <div className="bg-card rounded-3xl border border-border p-8 md:p-10">
-                  {submitted ? (
-                    <div className="text-center py-12">
-                      <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
-                        <AppIcon name="CheckCircleIcon" size={36} className="text-primary" />
-                      </div>
-                      <h2 className="font-display font-bold text-2xl text-foreground mb-3">
-                        Message Sent!
-                      </h2>
-                      <p className="text-muted-foreground mb-8">
-                        Thanks for reaching out. We&apos;ll get back to you within one business day.
-                      </p>
-                      <button
-                        onClick={() => { setSubmitted(false); setError(''); setForm({ name: '', email: '', phone: '', subject: '', message: '' }); }}
-                        className="btn-outline"
-                      >
-                        Send Another Message
-                      </button>
-                    </div>
-                  ) : (
-                    <>
-                      <h2 className="font-display font-bold text-2xl text-foreground mb-2">
-                        Send Us a Message
-                      </h2>
-                      <p className="text-muted-foreground text-sm mb-8">
-                        For general questions, scheduling, or feedback. We respond within one business day.
-                      </p>
-                      <form onSubmit={handleSubmit} className="space-y-5">
-                        <div className="grid sm:grid-cols-2 gap-5">
-                          <div>
-                            <label className="block text-sm font-semibold text-foreground mb-2">
-                              Full Name <span className="text-red-500">*</span>
-                            </label>
-                            <input
-                              type="text"
-                              name="name"
-                              value={form.name}
-                              onChange={handleChange}
-                              required
-                              placeholder="Jane Smith"
-                              className="input-field"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-semibold text-foreground mb-2">
-                              Email Address <span className="text-red-500">*</span>
-                            </label>
-                            <input
-                              type="email"
-                              name="email"
-                              value={form.email}
-                              onChange={handleChange}
-                              required
-                              placeholder="jane@example.com"
-                              className="input-field"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="grid sm:grid-cols-2 gap-5">
-                          <div>
-                            <label className="block text-sm font-semibold text-foreground mb-2">
-                              Phone Number <span className="text-muted-foreground font-normal">(optional)</span>
-                            </label>
-                            <input
-                              type="tel"
-                              name="phone"
-                              value={form.phone}
-                              onChange={handleChange}
-                              placeholder="+1 (563) 000-0000"
-                              className="input-field"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-semibold text-foreground mb-2">
-                              Subject <span className="text-red-500">*</span>
-                            </label>
-                            <select
-                              name="subject"
-                              value={form.subject}
-                              onChange={handleChange}
-                              required
-                              className="input-field"
-                            >
-                              <option value="">Select a subject…</option>
-                              {subjects.map((s) => (
-                                <option key={s} value={s}>{s}</option>
-                              ))}
-                            </select>
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-semibold text-foreground mb-2">
-                            Message <span className="text-red-500">*</span>
-                          </label>
-                          <textarea
-                            name="message"
-                            value={form.message}
-                            onChange={handleChange}
-                            required
-                            rows={6}
-                            placeholder="Tell us how we can help…"
-                            className="input-field resize-none"
-                          />
-                        </div>
-
-                        {error && (
-                          <div className="flex items-start gap-3 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-500">
-                            <AppIcon name="ExclamationTriangleIcon" size={18} className="flex-shrink-0 mt-0.5" />
-                            <span>{error}</span>
-                          </div>
-                        )}
-
-                        <button
-                          type="submit"
-                          disabled={submitting}
-                          className="btn-primary w-full justify-center disabled:opacity-60 disabled:cursor-not-allowed"
-                        >
-                          {submitting ? (
-                            <>
-                              <AppIcon name="ArrowPathIcon" size={16} className="animate-spin" />
-                              Sending...
-                            </>
-                          ) : (
-                            <>
-                              Send Message
-                              <AppIcon name="PaperAirplaneIcon" size={16} />
-                            </>
-                          )}
-                        </button>
-                      </form>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              {/* Info Panel — 2 cols */}
-              <div className="lg:col-span-2 space-y-6">
-                {/* Contact Info Card */}
-                <div className="bg-primary rounded-3xl p-8 text-primary-foreground">
-                  <h3 className="font-display font-bold text-xl mb-6">Contact Information</h3>
-                  <div className="space-y-5">
-                    <a href="tel:+15632728491" className="flex items-start gap-4 group">
-                      <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center flex-shrink-0">
-                        <AppIcon name="PhoneIcon" size={18} className="text-primary-foreground" />
-                      </div>
-                      <div>
-                        <p className="text-primary-foreground/60 text-xs uppercase tracking-wide font-semibold">Phone</p>
-                        <p className="text-primary-foreground font-medium group-hover:text-accent transition-colors">
-                          +1 563 272 8491
-                        </p>
-                      </div>
-                    </a>
-                    <a href="mailto:stelllc1@proton.me" className="flex items-start gap-4 group">
-                      <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center flex-shrink-0">
-                        <AppIcon name="EnvelopeIcon" size={18} className="text-primary-foreground" />
-                      </div>
-                      <div>
-                        <p className="text-primary-foreground/60 text-xs uppercase tracking-wide font-semibold">Email</p>
-                        <p className="text-primary-foreground font-medium group-hover:text-accent transition-colors">
-                          stelllc1@proton.me
-                        </p>
-                      </div>
-                    </a>
-                    <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center flex-shrink-0">
-                        <AppIcon name="MapPinIcon" size={18} className="text-primary-foreground" />
-                      </div>
-                      <div>
-                        <p className="text-primary-foreground/60 text-xs uppercase tracking-wide font-semibold">Address</p>
-                        <p className="text-primary-foreground font-medium">
-                          113 N Todds Ferry RD<br />Conesville, IA 52739
-                        </p>
-                      </div>
+            <div className="grid lg:grid-cols-5 gap-10">
+              {/* Contact info panel */}
+              <div className="lg:col-span-2 space-y-5">
+                {/* Address */}
+                <div className="bg-white rounded-2xl p-6 border border-[#C8D8E8]">
+                  <h3 className="font-semibold text-[#0B1F3A] mb-5 flex items-center gap-2">
+                    <Icon name="BuildingOffice2Icon" size={18} className="text-[#0D7377]" />
+                    Hospital Address
+                  </h3>
+                  <div className="flex items-start gap-3 mb-4">
+                    <Icon name="MapPinIcon" size={18} className="text-[#0D7377] mt-0.5 flex-shrink-0" />
+                    <div>
+                      <div className="font-medium text-[#0B1F3A] text-sm">No 1 Eziowelle Street</div>
+                      <div className="text-[#4A6080] text-sm">Box 880, Abakaliki</div>
+                      <div className="text-[#4A6080] text-sm">Ebonyi State, Nigeria</div>
                     </div>
                   </div>
+                  <a
+                    href="https://maps.google.com/?q=Abakaliki+Ebonyi+State+Nigeria"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-[#0D7377] font-medium flex items-center gap-1.5 hover:text-[#0a5a5e] transition-colors"
+                  >
+                    <Icon name="MapIcon" size={14} />
+                    View on Google Maps
+                  </a>
                 </div>
 
-                {/* Hours Card */}
-                <div className="bg-card rounded-3xl border border-border p-8">
-                  <div className="flex items-center gap-3 mb-5">
-                    <AppIcon name="ClockIcon" size={20} className="text-primary" />
-                    <h3 className="font-display font-bold text-lg text-foreground">Business Hours</h3>
-                  </div>
+                {/* Phone */}
+                <div className="bg-white rounded-2xl p-6 border border-[#C8D8E8]">
+                  <h3 className="font-semibold text-[#0B1F3A] mb-4 flex items-center gap-2">
+                    <Icon name="PhoneIcon" size={18} className="text-[#0D7377]" />
+                    Phone Numbers
+                  </h3>
                   <div className="space-y-3">
+                    <a href="tel:08032763199" className="flex items-center justify-between p-3 rounded-xl bg-[#F0F4F8] hover:bg-[#E4EDF5] transition-colors group">
+                      <div>
+                        <div className="text-xs text-[#4A6080] uppercase tracking-wider mb-0.5">Primary Line</div>
+                        <div className="font-semibold text-[#0B1F3A]">08032763199</div>
+                      </div>
+                      <Icon name="PhoneArrowUpRightIcon" size={16} className="text-[#0D7377] group-hover:scale-110 transition-transform" />
+                    </a>
+                    <a href="tel:08059231822" className="flex items-center justify-between p-3 rounded-xl bg-[#F0F4F8] hover:bg-[#E4EDF5] transition-colors group">
+                      <div>
+                        <div className="text-xs text-[#4A6080] uppercase tracking-wider mb-0.5">Secondary Line</div>
+                        <div className="font-semibold text-[#0B1F3A]">08059231822</div>
+                      </div>
+                      <Icon name="PhoneArrowUpRightIcon" size={16} className="text-[#0D7377] group-hover:scale-110 transition-transform" />
+                    </a>
+                  </div>
+                </div>
+
+                {/* Hours */}
+                <div className="bg-white rounded-2xl p-6 border border-[#C8D8E8]">
+                  <h3 className="font-semibold text-[#0B1F3A] mb-4 flex items-center gap-2">
+                    <Icon name="ClockIcon" size={18} className="text-[#0D7377]" />
+                    Opening Hours
+                  </h3>
+                  <div className="space-y-2.5 text-sm">
                     {[
-                      { day: 'Monday to Friday', hours: '7:00 AM to 6:00 PM' },
-                      { day: 'Saturday', hours: '8:00 AM to 4:00 PM' },
-                      { day: 'Sunday', hours: 'Closed' },
-                    ].map((row) => (
-                      <div key={row.day} className="flex justify-between items-center py-2 border-b border-border last:border-0">
-                        <span className="text-sm font-medium text-foreground">{row.day}</span>
-                        <span className={`text-sm ${row.hours === 'Closed' ? 'text-red-400 font-semibold' : 'text-muted-foreground'}`}>
-                          {row.hours}
-                        </span>
+                      { day: 'Monday – Friday', hours: '8:00 AM – 6:00 PM' },
+                      { day: 'Saturday', hours: '9:00 AM – 2:00 PM' },
+                      { day: 'Sunday', hours: 'Emergency Only' },
+                    ]?.map(row => (
+                      <div key={row?.day} className="flex justify-between items-center py-2 border-b border-[#F0F4F8] last:border-0">
+                        <span className="text-[#4A6080]">{row?.day}</span>
+                        <span className={`font-medium ${row?.hours === 'Emergency Only' ? 'text-[#C9A84C]' : 'text-[#0B1F3A]'}`}>{row?.hours}</span>
                       </div>
                     ))}
                   </div>
-                </div>
-
-                {/* Map Placeholder */}
-                <div className="bg-secondary rounded-3xl border border-border overflow-hidden">
-                  <div className="h-48 bg-muted flex items-center justify-center relative">
-                    <div className="text-center">
-                      <AppIcon name="MapIcon" size={40} className="text-muted-foreground mx-auto mb-2" />
-                      <p className="text-muted-foreground text-sm font-medium">Conesville, IA 52739</p>
-                      <p className="text-muted-foreground text-xs mt-1">113 N Todds Ferry RD</p>
-                    </div>
-                  </div>
-                  <div className="p-5">
-                    <a
-                      href="https://maps.google.com/?q=113+N+Todds+Ferry+RD+Conesville+IA+52739"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
-                    >
-                      <AppIcon name="ArrowTopRightOnSquareIcon" size={14} />
-                      Open in Google Maps
-                    </a>
+                  <div className="mt-4 flex items-center gap-2 text-xs text-green-600 font-medium">
+                    <span className="pulse-dot"></span>
+                    Emergency services available 24/7
                   </div>
                 </div>
 
-                {/* Quote Nudge */}
-                <div className="bg-secondary rounded-3xl border border-border p-6">
-                  <p className="text-sm text-muted-foreground mb-3">
-                    <strong className="text-foreground">Need a price estimate?</strong> Our Quote page is specifically designed for that, with fields for your property size, service type, and preferred start date.
+                {/* Book appointment nudge */}
+                <div className="bg-[#0D7377] rounded-2xl p-6">
+                  <h3 className="font-semibold text-white mb-2">Need a Medical Appointment?</h3>
+                  <p className="text-[rgba(255,255,255,0.75)] text-sm mb-4">
+                    This contact form is for general enquiries. To schedule a consultation with a doctor, please use our dedicated booking system.
                   </p>
-                  <Link href="/quote" className="btn-primary text-sm py-2.5 px-5 w-full justify-center">
-                    Request a Free Quote
-                    <AppIcon name="ArrowRightIcon" size={14} />
+                  <Link href="/appointments" className="btn-gold w-full justify-center text-sm py-3">
+                    <Icon name="CalendarDaysIcon" size={16} />
+                    Book an Appointment
                   </Link>
                 </div>
+              </div>
+
+              {/* Contact form */}
+              <div className="lg:col-span-3">
+                {submitted ? (
+                  <div className="bg-white rounded-2xl p-12 border border-[#C8D8E8] text-center h-full flex flex-col items-center justify-center">
+                    <div className="w-16 h-16 rounded-full bg-[#E4EDF5] flex items-center justify-center mx-auto mb-6">
+                      <Icon name="CheckCircleIcon" size={32} className="text-[#0D7377]" />
+                    </div>
+                    <h3 className="font-display text-2xl text-[#0B1F3A] font-semibold mb-3">Message Sent!</h3>
+                    <p className="text-[#4A6080] leading-relaxed max-w-md mb-8">
+                      Thank you for reaching out, <strong>{form?.name}</strong>. We have received your message and will respond within 1–2 business days.
+                    </p>
+                    <button
+                      onClick={() => { setSubmitted(false); setForm({ name: '', phone: '', email: '', subject: '', category: 'general', message: '' }); }}
+                      className="btn-primary"
+                    >
+                      Send Another Message
+                    </button>
+                  </div>
+                ) : (
+                  <div className="bg-white rounded-2xl border border-[#C8D8E8] overflow-hidden">
+                    <div className="bg-[#0B1F3A] px-8 py-5">
+                      <h2 className="font-semibold text-white text-lg">Send Us a Message</h2>
+                      <p className="text-[rgba(248,250,251,0.65)] text-sm mt-1">For general enquiries, feedback, and information requests</p>
+                    </div>
+                    <form onSubmit={handleSubmit} className="p-8 space-y-5">
+                      <div className="grid sm:grid-cols-2 gap-5">
+                        <div>
+                          <label className="block text-sm font-medium text-[#0B1F3A] mb-1.5">Full Name *</label>
+                          <input name="name" value={form?.name} onChange={handleChange} required className="input-field" placeholder="Your full name" />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-[#0B1F3A] mb-1.5">Phone Number</label>
+                          <input name="phone" value={form?.phone} onChange={handleChange} type="tel" className="input-field" placeholder="08012345678" />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-[#0B1F3A] mb-1.5">Email Address *</label>
+                        <input name="email" value={form?.email} onChange={handleChange} required type="email" className="input-field" placeholder="your@email.com" />
+                      </div>
+                      <div className="grid sm:grid-cols-2 gap-5">
+                        <div>
+                          <label className="block text-sm font-medium text-[#0B1F3A] mb-1.5">Enquiry Category *</label>
+                          <select name="category" value={form?.category} onChange={handleChange} className="input-field">
+                            <option value="general">General Enquiry</option>
+                            <option value="services">Services & Departments</option>
+                            <option value="billing">Billing & Payments</option>
+                            <option value="feedback">Patient Feedback</option>
+                            <option value="careers">Careers & Employment</option>
+                            <option value="media">Media & Press</option>
+                            <option value="other">Other</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-[#0B1F3A] mb-1.5">Subject *</label>
+                          <input name="subject" value={form?.subject} onChange={handleChange} required className="input-field" placeholder="Brief subject line" />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-[#0B1F3A] mb-1.5">Your Message *</label>
+                        <textarea
+                          name="message"
+                          value={form?.message}
+                          onChange={handleChange}
+                          required
+                          rows={6}
+                          className="input-field resize-none"
+                          placeholder="Please describe your enquiry in detail..."
+                        />
+                      </div>
+                      <div className="bg-[#F0F4F8] rounded-xl p-4 text-sm text-[#4A6080] border border-[#C8D8E8]">
+                        <Icon name="InformationCircleIcon" size={16} className="text-[#0D7377] inline mr-2" />
+                        This form is for general enquiries only. For medical emergencies, call <a href="tel:08032763199" className="font-semibold text-[#0D7377]">08032763199</a> immediately.
+                      </div>
+
+                      {error && (
+                        <div className="flex items-start gap-3 rounded-xl border border-red-500/30 bg-red-50 p-4 text-sm text-red-600">
+                          <Icon name="ExclamationTriangleIcon" size={18} className="flex-shrink-0 mt-0.5" />
+                          <span>{error}</span>
+                        </div>
+                      )}
+
+                      <button type="submit" disabled={submitting} className="btn-primary w-full justify-center py-4 text-base disabled:opacity-60 disabled:cursor-not-allowed">
+                        {submitting ? (
+                          <>
+                            <Icon name="ArrowPathIcon" size={18} className="animate-spin" />
+                            Sending...
+                          </>
+                        ) : (
+                          <>
+                            <Icon name="PaperAirplaneIcon" size={18} />
+                            Send Message
+                          </>
+                        )}
+                      </button>
+                    </form>
+                  </div>
+                )}
               </div>
             </div>
           </div>

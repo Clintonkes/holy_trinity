@@ -1,211 +1,113 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import AppImage from '@/components/ui/AppImage';
-import AppIcon from '@/components/ui/AppIcon';
 import Link from 'next/link';
 
-type FilterType = 'All' | 'Mowing' | 'Landscaping' | 'Cleanup';
-
-interface GalleryItem {
-  id: number;
-  src: string;
-  alt: string;
-  category: FilterType;
-  caption: string;
-  tag?: string;
-}
-
-const galleryItems: GalleryItem[] = [
+const galleryItems = [
 {
-  id: 1,
-  src: "https://images.unsplash.com/photo-1620951626378-8fd05c2eaa58",
-  alt: 'Freshly mowed residential lawn with crisp diagonal stripe pattern in Conesville Iowa',
-  category: 'Mowing',
-  caption: 'Precision stripe mowing: residential property',
-  tag: 'After'
+  src: "https://img.rocket.new/generatedImages/rocket_gen_img_1f070ca21-1779382472171.png",
+  alt: 'Modern hospital reception area with clean white interior and professional staff',
+  caption: 'Reception & Admissions',
+  span: 'lg:col-span-2'
 },
 {
-  id: 2,
-  src: "https://img.rocket.new/generatedImages/rocket_gen_img_11eeff759-1764672714142.png",
-  alt: 'Overgrown lawn before professional mowing service',
-  category: 'Mowing',
-  caption: 'Before: overgrown lawn needing attention',
-  tag: 'Before'
+  src: "https://img.rocket.new/generatedImages/rocket_gen_img_1fd17d7e6-1772074816371.png",
+  alt: 'Doctor consulting with patient in well-lit examination room',
+  caption: 'Consultation Rooms',
+  span: ''
 },
 {
-  id: 3,
-  src: "https://images.unsplash.com/photo-1655976180462-baac920ff3e2",
-  alt: 'Beautifully landscaped garden with trimmed hedges and colorful flower beds',
-  category: 'Landscaping',
-  caption: 'Full landscape refresh with mulching & edging',
-  tag: 'After'
+  src: "https://img.rocket.new/generatedImages/rocket_gen_img_13b7dca12-1767487539809.png",
+  alt: 'State-of-the-art hospital laboratory with diagnostic equipment',
+  caption: 'Laboratory Services',
+  span: ''
 },
 {
-  id: 4,
-  src: "https://images.unsplash.com/photo-1509815255965-168e71b4cff0",
-  alt: 'Autumn leaves covering a lawn before fall cleanup service',
-  category: 'Cleanup',
-  caption: 'Fall cleanup: leaf removal & bed prep',
-  tag: 'Before'
+  src: "https://img.rocket.new/generatedImages/rocket_gen_img_17b31f995-1766761681684.png",
+  alt: 'Maternity ward with comfortable beds and newborn care facilities',
+  caption: 'Maternity Ward',
+  span: ''
 },
 {
-  id: 5,
-  src: "https://img.rocket.new/generatedImages/rocket_gen_img_1e6a40b30-1787871620257.png",
-  alt: 'Clean yard after fall leaf removal showing healthy green grass',
-  category: 'Cleanup',
-  caption: 'After fall cleanup: ready for winter',
-  tag: 'After'
+  src: "https://images.unsplash.com/photo-1676552051349-b80140de1a8e",
+  alt: 'Nurse providing attentive care to patient in hospital ward',
+  caption: 'Patient Care',
+  span: 'lg:col-span-2'
 },
 {
-  id: 6,
-  src: "https://images.unsplash.com/photo-1604071254865-bfffe9296844",
-  alt: 'Neatly trimmed hedges and shrubs along a residential driveway',
-  category: 'Landscaping',
-  caption: 'Hedge trimming & shrub shaping',
-  tag: 'After'
+  src: "https://img.rocket.new/generatedImages/rocket_gen_img_12c8956e3-1771349277997.png",
+  alt: 'Medical team of doctors and nurses in hospital corridor',
+  caption: 'Our Medical Team',
+  span: ''
 },
 {
-  id: 7,
-  src: "https://img.rocket.new/generatedImages/rocket_gen_img_1fa31bf39-1777215858956.png",
-  alt: 'Lush green lawn after professional fertilization treatment',
-  category: 'Mowing',
-  caption: 'Post-fertilization: vibrant healthy turf',
-  tag: 'After'
+  src: "https://img.rocket.new/generatedImages/rocket_gen_img_1fa42366d-1772077450524.png",
+  alt: 'Senior doctor reviewing patient file in office',
+  caption: 'Specialist Consultations',
+  span: ''
 },
 {
-  id: 8,
-  src: "https://img.rocket.new/generatedImages/rocket_gen_img_1cb3605e8-1772214578353.png",
-  alt: 'Mulched garden beds with fresh dark mulch around trees and shrubs',
-  category: 'Landscaping',
-  caption: 'Fresh mulch installation around landscape beds',
-  tag: 'After'
+  src: "https://img.rocket.new/generatedImages/rocket_gen_img_1a2ff17c6-1767605770477.png",
+  alt: 'Hospital pharmacy with well-stocked shelves and pharmacist',
+  caption: 'In-House Pharmacy',
+  span: ''
 },
 {
-  id: 9,
-  src: "https://img.rocket.new/generatedImages/rocket_gen_img_1f59a8552-1772337394246.png",
-  alt: 'Spring yard cleanup with debris removal and fresh edging along walkway',
-  category: 'Cleanup',
-  caption: 'Spring cleanup: edging & debris removal',
-  tag: 'After'
-},
-{
-  id: 10,
-  src: "https://img.rocket.new/generatedImages/rocket_gen_img_153c02245-1772180904712.png",
-  alt: 'Wide view of a perfectly maintained residential lawn with defined edges',
-  category: 'Mowing',
-  caption: 'Residential lawn: weekly maintenance program',
-  tag: 'After'
-},
-{
-  id: 11,
-  src: "https://img.rocket.new/generatedImages/rocket_gen_img_13e9076eb-1764672715061.png",
-  alt: 'Overgrown shrubs and weedy garden beds before landscaping service',
-  category: 'Landscaping',
-  caption: 'Before: neglected landscape beds',
-  tag: 'Before'
-},
-{
-  id: 12,
-  src: "https://img.rocket.new/generatedImages/rocket_gen_img_153c02245-1772180904712.png",
-  alt: 'Commercial property lawn mowed and edged to professional standard',
-  category: 'Mowing',
-  caption: 'Commercial property: bi-weekly service',
-  tag: 'After'
+  src: "https://img.rocket.new/generatedImages/rocket_gen_img_1a1ce6cc3-1767652852855.png",
+  alt: 'Operating theatre with modern surgical equipment and lighting',
+  caption: 'Surgical Theatre',
+  span: 'lg:col-span-2'
 }];
 
 
-const filters: FilterType[] = ['All', 'Mowing', 'Landscaping', 'Cleanup'];
-
 export default function GalleryPage() {
-  const [activeFilter, setActiveFilter] = useState<FilterType>('All');
-
-  const filtered = activeFilter === 'All' ?
-  galleryItems :
-  galleryItems.filter((item) => item.category === activeFilter);
-
   return (
     <>
       <Header />
-      <main className="pt-28">
+      <main>
         {/* Hero */}
-        <section className="relative overflow-hidden bg-foreground py-20 md:py-28">
-          <div className="absolute inset-0 bg-grid-subtle opacity-20" />
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 text-center">
-            <span className="inline-block text-accent text-sm font-semibold tracking-widest uppercase mb-4">
-              Portfolio
-            </span>
-            <h1 className="font-display font-bold text-section-title text-primary-foreground mb-6">
-              Our Work Speaks<br />
-              <span className="text-stroke-primary" style={{ WebkitTextStroke: '1.5px #7A9A5C', color: 'transparent' }}>
-                For Itself
-              </span>
+        <section className="bg-[#0B1F3A] py-20 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-[#0D7377] blur-3xl" />
+          </div>
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="flex items-center gap-3 mb-5">
+              <span className="gold-line"></span>
+              <span className="text-xs font-semibold uppercase tracking-widest text-[#C9A84C]">Gallery</span>
+            </div>
+            <h1 className="font-display text-section-title text-[#F8FAFB] mb-4">
+              Our Facilities<br />
+              <span className="italic text-[#C9A84C]">& Environment</span>
             </h1>
-            <p className="text-lg text-primary-foreground/70 max-w-2xl mx-auto">
-              Browse real results from Stel LLC jobs across Conesville and surrounding Iowa communities.
+            <p className="text-[rgba(248,250,251,0.7)] max-w-xl leading-relaxed">
+              A look inside Holy Trinity Hospital & Maternity Complex — modern facilities, compassionate care, and a healing environment.
             </p>
           </div>
         </section>
 
-        {/* Filter Tabs */}
-        <section className="sticky top-20 z-30 bg-background/90 backdrop-blur-md border-b border-border py-4">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center gap-3 overflow-x-auto scrollbar-hide">
-            {filters.map((filter) =>
-            <button
-              key={filter}
-              onClick={() => setActiveFilter(filter)}
-              className={`flex-shrink-0 px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
-              activeFilter === filter ?
-              'bg-primary text-primary-foreground shadow-md' :
-              'bg-secondary text-muted-foreground hover:text-foreground hover:bg-muted'}`
-              }>
-              
-                {filter}
-              </button>
-            )}
-            <span className="ml-auto flex-shrink-0 text-sm text-muted-foreground">
-              {filtered.length} photos
-            </span>
-          </div>
-        </section>
-
-        {/* Gallery Grid */}
-        <section className="py-16 md:py-20">
+        {/* Gallery grid */}
+        <section className="py-16 bg-[#F0F4F8]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <div className="columns-1 sm:columns-2 lg:columns-3 gap-5 space-y-5">
-              {filtered.map((item) =>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {galleryItems?.map((item, idx) =>
               <div
-                key={item.id}
-                className="gallery-item break-inside-avoid relative overflow-hidden rounded-2xl bg-card border border-border group cursor-pointer">
+                key={idx}
+                className={`group relative rounded-2xl overflow-hidden bg-[#E4EDF5] ${item?.span}`}>
                 
-                  <div className="relative overflow-hidden">
-                    <AppImage
-                    src={item.src}
-                    alt={item.alt}
-                    width={800}
-                    height={600}
-                    className="w-full h-auto object-cover" />
+                  <div className={`${item?.span ? 'aspect-[16/9]' : 'aspect-[4/3]'} overflow-hidden`}>
+                    <img
+                    src={item?.src}
+                    alt={item?.alt}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                   
-                    <div className="gallery-overlay absolute inset-0 flex items-end p-4">
-                      <p className="text-white text-sm font-medium">{item.caption}</p>
-                    </div>
-                    {item.tag &&
-                  <span
-                    className={`absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${
-                    item.tag === 'After' ? 'bg-primary text-primary-foreground' : 'bg-foreground/80 text-primary-foreground'}`
-                    }>
-                    
-                        {item.tag}
-                      </span>
-                  }
-                    <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-medium bg-card/80 text-foreground backdrop-blur-sm">
-                      {item.category}
-                    </span>
                   </div>
-                  <div className="p-4">
-                    <p className="text-sm text-muted-foreground">{item.caption}</p>
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0B1F3A]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-5">
+                    <span className="text-white font-semibold text-sm">{item?.caption}</span>
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#0B1F3A]/60 to-transparent p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                    <span className="text-white text-sm font-medium">{item?.caption}</span>
                   </div>
                 </div>
               )}
@@ -214,19 +116,17 @@ export default function GalleryPage() {
         </section>
 
         {/* CTA */}
-        <section className="py-20 bg-secondary">
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
-            <AppIcon name="SparklesIcon" size={40} className="text-primary mx-auto mb-6" />
-            <h2 className="font-display font-bold text-card-title text-foreground mb-4">
-              Want results like these for your property?
+        <section className="py-16 bg-white">
+          <div className="max-w-2xl mx-auto px-4 sm:px-6 text-center">
+            <h2 className="font-display text-3xl text-[#0B1F3A] font-semibold mb-4">
+              Experience Our Care <span className="italic text-[#0D7377]">in Person</span>
             </h2>
-            <p className="text-muted-foreground mb-8">
-              Get a free, no-obligation quote from Stel LLC. We serve Conesville, IA and surrounding areas.
+            <p className="text-[#4A6080] leading-relaxed mb-8">
+              We invite you to visit Holy Trinity Hospital & Maternity Complex. Our team is ready to welcome you and provide the highest standard of care.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/quote" className="btn-primary">
-                Get a Free Quote
-                <AppIcon name="ArrowRightIcon" size={16} />
+            <div className="flex flex-wrap gap-4 justify-center">
+              <Link href="/appointments" className="btn-primary">
+                Book an Appointment
               </Link>
               <Link href="/contact" className="btn-outline">
                 Contact Us

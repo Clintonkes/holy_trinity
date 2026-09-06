@@ -3,14 +3,16 @@ import { MetadataRoute } from 'next';
 export const dynamic = 'force-static';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+
   return [
-    { url: `${base}/`, lastModified: new Date(), priority: 1.0 },
-    { url: `${base}/services`, lastModified: new Date(), priority: 0.8 },
-    { url: `${base}/quote`, lastModified: new Date(), priority: 0.8 },
-    { url: `${base}/gallery`, lastModified: new Date(), priority: 0.7 },
-    { url: `${base}/about`, lastModified: new Date(), priority: 0.7 },
-    { url: `${base}/testimonials`, lastModified: new Date(), priority: 0.6 },
-    { url: `${base}/contact`, lastModified: new Date(), priority: 0.5 },
+    { url: baseUrl, lastModified: new Date(), changeFrequency: 'weekly', priority: 1.0 },
+    { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${baseUrl}/departments`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${baseUrl}/team`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/patient-info`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/gallery`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${baseUrl}/appointments`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.95 },
+    { url: `${baseUrl}/contact`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
   ];
 }

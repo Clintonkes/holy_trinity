@@ -28,8 +28,8 @@ jobs:
         env:
           NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
           NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
-          # Serving from stelllc.org at the root now — no BASE_PATH needed.
-          # (Only required for the old default github.io/stel/ project path.)
+          # BASE_PATH is only needed when serving from a github.io/<repo>/ subpath
+          # rather than a custom domain at the root.
       - run: touch out/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -18,7 +18,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 
-class BookingStatus(str, enum.Enum):
+class AppointmentStatus(str, enum.Enum):
     pending = "pending"
     confirmed = "confirmed"
     approved = "approved"
@@ -26,22 +26,23 @@ class BookingStatus(str, enum.Enum):
     completed = "completed"
 
 
-class Booking(Base):
-    __tablename__ = "bookings"
+class Appointment(Base):
+    __tablename__ = "appointments"
 
     id = Column(Integer, primary_key=True, index=True)
     reference = Column(String, unique=True, index=True)
-    address = Column(String, nullable=False)
-    frequency = Column(String, nullable=True)
-    name = Column(String, nullable=False)
-    email = Column(String, nullable=False)
-    phone = Column(String, nullable=True)
+    first_name = Column(String, nullable=False)
+    last_name = Column(String, nullable=False)
+    phone = Column(String, nullable=False)
+    email = Column(String, nullable=True)
+    dob = Column(Date, nullable=True)
+    department = Column(String, nullable=False)
     preferred_date = Column(Date, nullable=True)
     preferred_time = Column(String, nullable=True)
-    service = Column(String, nullable=True)
-    lawn_size = Column(String, nullable=True)
-    notes = Column(Text, nullable=True)
-    status = Column(String, default=BookingStatus.pending.value)
+    visit_type = Column(String, nullable=True)
+    existing_patient = Column(String, nullable=True)
+    reason = Column(Text, nullable=True)
+    status = Column(String, default=AppointmentStatus.pending.value)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
@@ -54,6 +55,7 @@ class Contact(Base):
     email = Column(String, nullable=False)
     phone = Column(String, nullable=True)
     subject = Column(String, nullable=True)
+    category = Column(String, default="general")
     message = Column(Text, nullable=False)
     status = Column(String, default="new")
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
@@ -76,25 +78,23 @@ def _ensure_columns():
     inspector = inspect(engine)
     table_names = set(inspector.get_table_names())
 
-    if "bookings" in table_names:
-        existing = {col["name"] for col in inspector.get_columns("bookings")}
+    if "appointments" in table_names:
+        existing = {col["name"] for col in inspector.get_columns("appointments")}
         with engine.begin() as conn:
-            if "preferred_date" not in existing:
-                conn.execute(text("ALTER TABLE bookings ADD COLUMN preferred_date DATE"))
-            if "preferred_time" not in existing:
-                conn.execute(text("ALTER TABLE bookings ADD COLUMN preferred_time VARCHAR"))
-            if "service" not in existing:
-                conn.execute(text("ALTER TABLE bookings ADD COLUMN service VARCHAR"))
-            if "lawn_size" not in existing:
-                conn.execute(text("ALTER TABLE bookings ADD COLUMN lawn_size VARCHAR"))
-            if "notes" not in existing:
-                conn.execute(text("ALTER TABLE bookings ADD COLUMN notes TEXT"))
+            if "visit_type" not in existing:
+                conn.execute(text("ALTER TABLE appointments ADD COLUMN visit_type VARCHAR"))
+            if "existing_patient" not in existing:
+                conn.execute(text("ALTER TABLE appointments ADD COLUMN existing_patient VARCHAR"))
+            if "dob" not in existing:
+                conn.execute(text("ALTER TABLE appointments ADD COLUMN dob DATE"))
 
     if "contacts" in table_names:
         existing = {col["name"] for col in inspector.get_columns("contacts")}
         with engine.begin() as conn:
             if "status" not in existing:
                 conn.execute(text("ALTER TABLE contacts ADD COLUMN status VARCHAR DEFAULT 'new'"))
+            if "category" not in existing:
+                conn.execute(text("ALTER TABLE contacts ADD COLUMN category VARCHAR DEFAULT 'general'"))
 
 
 def init_db():

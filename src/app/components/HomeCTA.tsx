@@ -1,67 +1,60 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import AppImage from '@/components/ui/AppImage';
 import Icon from '@/components/ui/AppIcon';
 
 export default function HomeCTA() {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const items = sectionRef?.current?.querySelectorAll('.reveal-hidden');
-    if (!items) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.remove('reveal-hidden');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
-    items?.forEach((el) => observer?.observe(el));
-    return () => observer?.disconnect();
-  }, []);
-
   return (
-    <section ref={sectionRef} className="py-16 px-4 sm:px-6 bg-background">
-      <div className="max-w-7xl mx-auto">
-        <div className="relative rounded-3xl overflow-hidden min-h-[360px] flex items-center">
-          {/* Background Image */}
-          <AppImage
-            src="https://images.unsplash.com/photo-1735470935648-db48c4004fe8"
-            alt="Aerial view of neatly maintained green lawn and garden beds in bright sunlight"
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 90vw" />
-          
-          {/* Scrim */}
-          <div className="absolute inset-0 bg-gradient-to-r from-foreground/80 via-foreground/55 to-transparent" />
-
-          {/* Content */}
-          <div className="relative z-10 px-8 sm:px-12 py-12 max-w-xl">
-            <h2 className="font-display text-section-title text-primary-foreground mb-4 reveal reveal-hidden">
-              Ready for a lawn you're proud of?
-            </h2>
-            <p className="text-primary-foreground/75 leading-relaxed mb-8 reveal reveal-hidden" style={{ transitionDelay: '80ms' }}>
-              Get a free, no-obligation quote from Stel LLC. We'll assess your property and recommend the right service plan for your budget and goals.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 reveal reveal-hidden" style={{ transitionDelay: '160ms' }}>
-              <Link href="/quote" className="btn-primary">
-                Request a Free Quote
-                <Icon name="ArrowRightIcon" size={18} />
+    <section className="py-20 bg-[#F0F4F8]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="grid md:grid-cols-2 gap-6">
+          {/* Book Appointment card */}
+          <div className="bg-[#0D7377] rounded-2xl p-10 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-48 h-48 rounded-full bg-white/5 -translate-y-1/2 translate-x-1/2" />
+            <div className="relative z-10">
+              <div className="w-12 h-12 rounded-xl bg-white/15 flex items-center justify-center mb-6">
+                <Icon name="CalendarDaysIcon" size={24} className="text-white" />
+              </div>
+              <h3 className="font-display text-2xl text-white font-semibold mb-3">
+                Book an Appointment
+              </h3>
+              <p className="text-[rgba(255,255,255,0.75)] text-sm leading-relaxed mb-7">
+                Schedule a consultation with one of our specialists. Choose your preferred date, time, and department — we'll confirm within 24 hours.
+              </p>
+              <Link href="/appointments" className="btn-gold">
+                Schedule Now
+                <Icon name="ArrowRightIcon" size={16} />
               </Link>
-              <a href="tel:+15632728491" className="btn-outline-white">
-                <Icon name="PhoneIcon" size={16} />
-                563-272-8491
-              </a>
+            </div>
+          </div>
+
+          {/* Emergency / Contact card */}
+          <div className="bg-[#0B1F3A] rounded-2xl p-10 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-48 h-48 rounded-full bg-white/5 -translate-y-1/2 translate-x-1/2" />
+            <div className="relative z-10">
+              <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-6">
+                <Icon name="PhoneIcon" size={24} className="text-[#C9A84C]" />
+              </div>
+              <h3 className="font-display text-2xl text-white font-semibold mb-3">
+                Emergency & Enquiries
+              </h3>
+              <p className="text-[rgba(255,255,255,0.65)] text-sm leading-relaxed mb-7">
+                For medical emergencies, call us immediately. For general enquiries, our team is available to assist you during business hours.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <a href="tel:08032763199" className="btn-gold">
+                  <Icon name="PhoneIcon" size={16} />
+                  08032763199
+                </a>
+                <Link href="/contact" className="btn-outline-white">
+                  Send a Message
+                </Link>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </section>);
-
+    </section>
+  );
 }

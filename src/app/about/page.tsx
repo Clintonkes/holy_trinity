@@ -1,272 +1,162 @@
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import AppImage from '@/components/ui/AppImage';
-import AppIcon from '@/components/ui/AppIcon';
 import Link from 'next/link';
+import Icon from '@/components/ui/AppIcon';
 
 const values = [
-{
-  icon: 'ShieldCheckIcon',
-  title: 'Reliability',
-  description:
-  'When we say we\'ll be there, we\'re there. Consistent scheduling and dependable service you can count on every season.'
-},
-{
-  icon: 'StarIcon',
-  title: 'Quality',
-  description:
-  'We don\'t cut corners, literally. Every edge, every stripe, every bed is finished to the highest standard before we leave.'
-},
-{
-  icon: 'HeartIcon',
-  title: 'Community',
-  description:
-  'Conesville is our home. We take pride in keeping our neighbors\' properties looking their best and supporting the community we live in.'
-}];
+{ title: 'Compassion', body: 'We treat every patient with empathy, dignity, and respect — because behind every case is a person who matters.' },
+{ title: 'Excellence', body: 'We hold ourselves to the highest clinical standards, continuously improving our skills, facilities, and processes.' },
+{ title: 'Integrity', body: 'Honest communication, transparent billing, and ethical practice are non-negotiable at Holy Trinity Hospital.' },
+{ title: 'Community', body: 'We are deeply rooted in Abakaliki and Ebonyi State — our success is measured by the health of our community.' }];
 
 
-const team = [
-{
-  name: 'Tyler Stelken',
-  role: 'Owner & Lead Operator',
-  image: "https://images.unsplash.com/photo-1717547183717-fec611c3de13",
-  alt: 'Tyler Stelken, owner of Stel LLC lawncare, smiling outdoors in work attire',
-  bio: 'Born and raised in the Conesville area, Tyler started Stel LLC with a simple goal: give every customer the same care he\'d want for his own yard. With years of hands-on experience, he personally oversees every job.'
-},
-{
-  name: 'Marcus Webb',
-  role: 'Senior Crew Member',
-  image: "https://images.unsplash.com/photo-1659623203890-37b2e0be9070",
-  alt: 'Marcus Webb, senior crew member at Stel LLC, standing in front of a green lawn',
-  bio: 'Marcus brings precision and attention to detail to every property. Specializing in edging, trimming, and landscape cleanup, he\'s a cornerstone of the Stel LLC team.'
-}];
-
-
-const serviceAreas = [
-'Conesville, IA',
-'Wapello, IA',
-'Columbus Junction, IA',
-'Grandview, IA',
-'Oakville, IA',
-'Letts, IA'];
+const milestones = [
+{ year: 'Founded', event: 'Holy Trinity Hospital & Maternity Complex established in Abakaliki, Ebonyi State.' },
+{ year: 'Growth', event: 'Expanded maternity wing and added specialist paediatric and surgical departments.' },
+{ year: 'Accreditation', event: 'Received full NMA accreditation, affirming our commitment to national healthcare standards.' },
+{ year: 'Today', event: 'Serving over 15,000 patients annually with a team of 30+ medical professionals.' }];
 
 
 export default function AboutPage() {
   return (
     <>
       <Header />
-      <main className="pt-28">
-        {/* Hero */}
-        <section className="relative overflow-hidden bg-foreground py-20 md:py-28">
-          <div className="absolute inset-0 bg-grid-subtle opacity-20" />
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
-            <div className="max-w-3xl">
-              <span className="inline-block text-accent text-sm font-semibold tracking-widest uppercase mb-4">
-                Our Story
-              </span>
-              <h1 className="font-display font-bold text-section-title text-primary-foreground mb-6">
-                About Stel LLC
-              </h1>
-              <p className="text-xl text-primary-foreground/70 leading-relaxed">
-                A local lawncare company built on hard work, honest pricing, and a genuine love for the craft, right here in Conesville, Iowa.
-              </p>
+      <main>
+        {/* Page hero */}
+        <section className="bg-[#0B1F3A] py-24 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-[#0D7377] blur-3xl" />
+          </div>
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="flex items-center gap-3 mb-5">
+              <span className="gold-line"></span>
+              <span className="text-xs font-semibold uppercase tracking-widest text-[#C9A84C]">About Us</span>
             </div>
+            <h1 className="font-display text-section-title text-[#F8FAFB] mb-5">
+              Our Story &<br />
+              <span className="italic text-[#C9A84C]">Our Mission</span>
+            </h1>
+            <p className="text-[rgba(248,250,251,0.7)] max-w-xl leading-relaxed">
+              Holy Trinity Hospital & Maternity Complex has been a cornerstone of healthcare in Abakaliki, Ebonyi State — built on faith, driven by excellence, and guided by compassion.
+            </p>
           </div>
         </section>
 
-        {/* Story Section */}
-        <section className="py-20 md:py-28">
+        {/* Mission & Vision */}
+        <section className="py-20 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
-              <div>
-                <span className="inline-block text-accent text-sm font-semibold tracking-widest uppercase mb-4">
-                  How It Started
-                </span>
-                <h2 className="font-display font-bold text-section-title text-foreground mb-6">
-                  Rooted in<br />Conesville
-                </h2>
-                <div className="space-y-5 text-muted-foreground leading-relaxed">
-                  <p>
-                    Stel LLC was founded with a straightforward mission: deliver professional-grade lawncare to homeowners and businesses in Conesville, Iowa and the surrounding communities, at a fair price, with no excuses.
-                  </p>
-                  <p>
-                    What started as a one-person operation with a truck and a mower has grown into a trusted local service that hundreds of customers rely on every season. We know this land, we know this climate, and we know what it takes to keep Iowa lawns looking their best through hot summers, wet springs, and crisp fall seasons.
-                  </p>
-                  <p>
-                    Every property we service gets the same attention we'd give our own. That's not a slogan, it's how we operate, every single day.
-                  </p>
+            <div className="grid md:grid-cols-2 gap-8 mb-16">
+              <div className="bg-[#F0F4F8] rounded-2xl p-8 border border-[#C8D8E8]">
+                <div className="w-12 h-12 rounded-xl bg-[#0D7377] flex items-center justify-center mb-5">
+                  <Icon name="EyeIcon" size={22} className="text-white" />
                 </div>
-                <div className="mt-8 flex flex-col sm:flex-row gap-4">
-                  <Link href="/services" className="btn-primary">
-                    Our Services
-                    <AppIcon name="ArrowRightIcon" size={16} />
-                  </Link>
-                  <Link href="/quote" className="btn-outline">
-                    Get a Quote
-                  </Link>
-                </div>
+                <h3 className="font-display text-2xl text-[#0B1F3A] font-semibold mb-3">Our Vision</h3>
+                <p className="text-[#4A6080] leading-relaxed">
+                  To be the leading healthcare institution in Ebonyi State — a centre of medical excellence that sets the standard for patient care, clinical outcomes, and community health in South-East Nigeria.
+                </p>
               </div>
-              <div className="relative">
-                <div className="rounded-3xl overflow-hidden shadow-2xl">
-                  <AppImage
-                    src="https://img.rocket.new/generatedImages/rocket_gen_img_105241732-1787871620368.png"
-                    alt="Stel LLC crew member operating a professional lawn mower on a residential property in Iowa"
-                    width={900}
-                    height={700}
-                    className="w-full h-auto object-cover" />
-                  
+              <div className="bg-[#0D7377] rounded-2xl p-8">
+                <div className="w-12 h-12 rounded-xl bg-white/15 flex items-center justify-center mb-5">
+                  <Icon name="HeartIcon" size={22} className="text-white" />
                 </div>
-                <div className="absolute -bottom-6 -left-6 bg-primary text-primary-foreground rounded-2xl p-6 shadow-xl">
-                  <p className="font-display font-bold text-4xl">5+</p>
-                  <p className="text-sm text-primary-foreground/80 mt-1">Years Serving<br />Conesville</p>
-                </div>
+                <h3 className="font-display text-2xl text-white font-semibold mb-3">Our Mission</h3>
+                <p className="text-[rgba(255,255,255,0.8)] leading-relaxed">
+                  To deliver accessible, compassionate, and world-class medical care to every patient — regardless of background — while fostering a culture of continuous learning and professional excellence among our staff.
+                </p>
               </div>
             </div>
-          </div>
-        </section>
 
-        {/* Values */}
-        <section className="py-20 bg-secondary">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-14">
-              <span className="inline-block text-accent text-sm font-semibold tracking-widest uppercase mb-4">
-                What We Stand For
-              </span>
-              <h2 className="font-display font-bold text-section-title text-foreground">
-                Our Values
-              </h2>
-            </div>
-            <div className="grid md:grid-cols-3 gap-8">
-              {values.map((value) =>
-              <div
-                key={value.title}
-                className="bg-card rounded-3xl p-8 border border-border service-card-hover">
-                
-                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
-                    <AppIcon name={value.icon as any} size={28} className="text-primary" />
+            {/* Values */}
+            <div className="mb-4">
+              <div className="flex items-center gap-3 mb-8">
+                <span className="gold-line"></span>
+                <span className="text-xs font-semibold uppercase tracking-widest text-[#0D7377]">Our Core Values</span>
+              </div>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                {values?.map((val, idx) =>
+                <div key={val?.title} className="bg-[#F0F4F8] rounded-xl p-6 border border-[#C8D8E8]">
+                    <div className="text-3xl font-bold text-[#C9A84C] font-display mb-3">
+                      {String(idx + 1)?.padStart(2, '0')}
+                    </div>
+                    <h4 className="font-semibold text-[#0B1F3A] mb-2">{val?.title}</h4>
+                    <p className="text-sm text-[#4A6080] leading-relaxed">{val?.body}</p>
                   </div>
-                  <h3 className="font-display font-bold text-xl text-foreground mb-3">
-                    {value.title}
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed">{value.description}</p>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Team */}
-        <section className="py-20 md:py-28">
+        {/* Medical Director */}
+        <section className="py-20 bg-[#F0F4F8] bg-medical-pattern">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-14">
-              <span className="inline-block text-accent text-sm font-semibold tracking-widest uppercase mb-4">
-                The People Behind the Work
-              </span>
-              <h2 className="font-display font-bold text-section-title text-foreground">
-                Meet the Team
-              </h2>
+            <div className="flex items-center gap-3 mb-10">
+              <span className="gold-line"></span>
+              <span className="text-xs font-semibold uppercase tracking-widest text-[#0D7377]">Leadership</span>
             </div>
-            <div className="grid md:grid-cols-2 gap-10 max-w-4xl mx-auto">
-              {team.map((member) =>
-              <div
-                key={member.name}
-                className="bg-card rounded-3xl overflow-hidden border border-border service-card-hover">
-                
-                  <div className="relative h-64 overflow-hidden">
-                    <AppImage
-                    src={member.image}
-                    alt={member.alt}
-                    width={400}
-                    height={300}
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <div className="rounded-2xl overflow-hidden aspect-[4/3] bg-[#E4EDF5]">
+                  <img
+                    src="https://img.rocket.new/generatedImages/rocket_gen_img_105b7b2e3-1773018269462.png"
+                    alt="Dr. Onuorah Chester J.E., Medical Director, standing in hospital corridor in white coat"
                     className="w-full h-full object-cover object-top" />
                   
-                  </div>
-                  <div className="p-7">
-                    <h3 className="font-display font-bold text-xl text-foreground">{member.name}</h3>
-                    <p className="text-accent font-semibold text-sm mt-1 mb-4">{member.role}</p>
-                    <p className="text-muted-foreground leading-relaxed text-sm">{member.bio}</p>
-                  </div>
                 </div>
-              )}
+              </div>
+              <div>
+                <h2 className="font-display text-4xl text-[#0B1F3A] font-semibold mb-2">
+                  Dr. Onuorah Chester J.E.
+                </h2>
+                <div className="text-[#0D7377] font-semibold mb-1">Medical Director</div>
+                <div className="text-sm text-[#4A6080] mb-6 font-medium">MBBS, MNMA, MAGPMP, KSM, JP</div>
+                <p className="text-[#4A6080] leading-relaxed mb-5">
+                  Dr. Onuorah Chester J.E. is a highly distinguished medical professional with extensive experience in hospital administration and clinical practice. As Medical Director of Holy Trinity Hospital & Maternity Complex, he provides visionary leadership that has transformed the institution into one of Ebonyi State's most trusted healthcare providers.
+                </p>
+                <p className="text-[#4A6080] leading-relaxed mb-8">
+                  His qualifications — MBBS, MNMA, MAGPMP, KSM, JP — reflect a career dedicated not only to medicine but to management excellence, community service, and professional distinction. Under his leadership, the hospital has achieved significant milestones in patient care quality and facility development.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <Link href="/team" className="btn-primary">
+                    Meet the Full Team
+                    <Icon name="ArrowRightIcon" size={16} />
+                  </Link>
+                  <Link href="/appointments" className="btn-outline">
+                    Book a Consultation
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Service Area */}
-        <section className="py-20 bg-foreground">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
-              <div>
-                <span className="inline-block text-accent text-sm font-semibold tracking-widest uppercase mb-4">
-                  Where We Work
-                </span>
-                <h2 className="font-display font-bold text-section-title text-primary-foreground mb-6">
-                  Service Area
-                </h2>
-                <p className="text-primary-foreground/70 leading-relaxed mb-8">
-                  Based in Conesville, Iowa, we proudly serve homeowners and businesses throughout Louisa County and neighboring communities. Not sure if we cover your area? Give us a call, we're always happy to discuss.
-                </p>
-                <div className="grid grid-cols-2 gap-3 mb-8">
-                  {serviceAreas.map((area) =>
-                  <div key={area} className="flex items-center gap-2.5">
-                      <AppIcon name="MapPinIcon" size={16} className="text-accent flex-shrink-0" />
-                      <span className="text-primary-foreground/80 text-sm font-medium">{area}</span>
-                    </div>
-                  )}
-                </div>
-                <a href="tel:+15632728491" className="btn-primary">
-                  <AppIcon name="PhoneIcon" size={16} />
-                  Call +1 563 272 8491
-                </a>
+        {/* Timeline */}
+        <section className="py-20 bg-white">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-12">
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <span className="gold-line"></span>
+                <span className="text-xs font-semibold uppercase tracking-widest text-[#0D7377]">Our Journey</span>
+                <span className="gold-line"></span>
               </div>
-              <div className="bg-card/10 rounded-3xl p-8 border border-white/10">
-                <div className="space-y-5">
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center flex-shrink-0">
-                      <AppIcon name="MapPinIcon" size={20} className="text-accent" />
+              <h2 className="font-display text-section-title text-[#0B1F3A]">
+                Milestones of <span className="italic text-[#0D7377]">Excellence</span>
+              </h2>
+            </div>
+            <div className="relative">
+              <div className="absolute left-8 top-0 bottom-0 w-px bg-[#C8D8E8]" />
+              <div className="space-y-8">
+                {milestones?.map((m, idx) =>
+                <div key={idx} className="flex gap-8 items-start">
+                    <div className="w-16 h-16 rounded-full bg-[#0D7377] flex items-center justify-center flex-shrink-0 z-10 border-4 border-white shadow-md">
+                      <span className="text-white font-bold text-xs text-center leading-tight px-1">{m?.year}</span>
                     </div>
-                    <div>
-                      <p className="text-primary-foreground font-semibold">Address</p>
-                      <p className="text-primary-foreground/60 text-sm mt-0.5">113 N Todds Ferry RD<br />Conesville, IA 52739</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center flex-shrink-0">
-                      <AppIcon name="PhoneIcon" size={20} className="text-accent" />
-                    </div>
-                    <div>
-                      <p className="text-primary-foreground font-semibold">Phone</p>
-                      <a href="tel:+15632728491" className="text-primary-foreground/60 text-sm mt-0.5 hover:text-accent transition-colors">
-                        +1 563 272 8491
-                      </a>
+                    <div className="bg-[#F0F4F8] rounded-xl p-5 border border-[#C8D8E8] flex-1 mt-2">
+                      <p className="text-[#4A6080] leading-relaxed">{m?.event}</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center flex-shrink-0">
-                      <AppIcon name="EnvelopeIcon" size={20} className="text-accent" />
-                    </div>
-                    <div>
-                      <p className="text-primary-foreground font-semibold">Email</p>
-                      <a href="mailto:stelllc1@proton.me" className="text-primary-foreground/60 text-sm mt-0.5 hover:text-accent transition-colors">
-                        stelllc1@proton.me
-                      </a>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center flex-shrink-0">
-                      <AppIcon name="ClockIcon" size={20} className="text-accent" />
-                    </div>
-                    <div>
-                      <p className="text-primary-foreground font-semibold">Hours</p>
-                      <p className="text-primary-foreground/60 text-sm mt-0.5">
-                        Mon to Fri: 7am to 6pm<br />
-                        Sat: 8am to 4pm<br />
-                        Sun: Closed
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                )}
               </div>
             </div>
           </div>

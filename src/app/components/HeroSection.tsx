@@ -2,102 +2,139 @@
 
 import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
-import AppImage from '@/components/ui/AppImage';
 import Icon from '@/components/ui/AppIcon';
 
 export default function HeroSection() {
-  const parallaxRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (!parallaxRef?.current) return;
-      const scrollY = window.scrollY;
-      parallaxRef.current.style.transform = `translateY(${scrollY * 0.35}px)`;
+    const el = heroRef.current;
+    if (!el) return;
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = el.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width - 0.5) * 12;
+      const y = ((e.clientY - rect.top) / rect.height - 0.5) * 8;
+      const layer = el.querySelector('.parallax-layer') as HTMLElement;
+      if (layer) {
+        layer.style.transform = `translate(${x}px, ${y}px) scale(1.05)`;
+      }
     };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    el.addEventListener('mousemove', handleMouseMove);
+    return () => el.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-      {/* Parallax Background */}
-      <div ref={parallaxRef} className="absolute inset-0 w-full h-[115%] -top-[7.5%] will-change-transform">
-        <AppImage
-          src="https://img.rocket.new/generatedImages/rocket_gen_img_16e3c6104-1772178777531.png"
-          alt="Lush green lawn in golden morning light, freshly mowed with clean stripes, deep shadows, rich dark grass"
-          fill
-          priority
-          className="object-cover"
-          sizes="100vw" />
-        
-        {/* Scrim overlay — dark for white text */}
+    <section
+      ref={heroRef}
+      className="relative min-h-[92vh] flex items-center overflow-hidden bg-[#0B1F3A]"
+    >
+      {/* Background image layer */}
+      <div className="parallax-layer absolute inset-0 transition-transform duration-700 ease-out">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=1600&q=80')`,
+          }}
+        />
         <div className="absolute inset-0 bg-hero-overlay" />
       </div>
 
-      {/* Hero Content */}
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 text-center pt-32 pb-20">
-        {/* Eyebrow */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/25 bg-white/10 backdrop-blur-sm text-sm text-primary-foreground/80 mb-8">
-          <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-          Serving Conesville, IA & Muscatine County
-        </div>
-
-        {/* Headline */}
-        <h1 className="font-display text-hero text-primary-foreground mb-6">
-          Lawns that make{' '}
-          <span className="italic font-light opacity-80">neighbors</span>
-          <br />
-          look twice.
-        </h1>
-
-        {/* Subheadline */}
-        <p className="max-w-2xl mx-auto text-lg md:text-xl text-primary-foreground/70 leading-relaxed mb-10">
-          Stel LLC delivers precision lawncare across every season, from weekly mowing and edging to full spring cleanups and fertilization programs.
-        </p>
-
-        {/* CTAs */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link href="/quote" className="btn-primary text-base">
-            Get a Free Quote
-            <Icon name="ArrowRightIcon" size={18} />
-          </Link>
-          <Link href="/services" className="btn-outline-white text-base">
-            View Services
-          </Link>
-        </div>
+      {/* Decorative teal accent */}
+      <div className="absolute top-0 right-0 w-1/3 h-full opacity-10">
+        <div className="absolute inset-0 bg-gradient-to-l from-[#0D7377] to-transparent" />
       </div>
 
-      {/* Floating Glass Card */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 pb-16">
-        <div className="hidden md:block absolute bottom-0 left-6 lg:left-10">
-          <div className="glass-card p-6 rounded-2xl shadow-xl max-w-xs">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-primary/90 flex items-center justify-center">
-                <Icon name="StarIcon" size={18} className="text-primary-foreground" variant="solid" />
+      {/* Floating cross pattern */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(6)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute opacity-5"
+            style={{
+              top: `${15 + i * 15}%`,
+              right: `${5 + (i % 3) * 12}%`,
+              animationDelay: `${i * 0.8}s`,
+            }}
+          >
+            <svg width={i % 2 === 0 ? 40 : 24} height={i % 2 === 0 ? 40 : 24} viewBox="0 0 40 40" fill="none">
+              <rect x="16" y="2" width="8" height="36" rx="3" fill="#0D7377"/>
+              <rect x="2" y="16" width="36" height="8" rx="3" fill="#0D7377"/>
+            </svg>
+          </div>
+        ))}
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-24">
+        <div className="max-w-3xl">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2.5 bg-[rgba(13,115,119,0.25)] border border-[rgba(13,115,119,0.4)] rounded-full px-4 py-2 mb-8">
+            <span className="pulse-dot"></span>
+            <span className="text-sm font-medium text-[rgba(248,250,251,0.9)] tracking-wide">
+              Emergency Services Available 24/7
+            </span>
+          </div>
+
+          {/* Headline */}
+          <h1 className="font-display text-hero text-[#F8FAFB] mb-6 leading-[1.0]">
+            Healing with{' '}
+            <span className="italic text-[#C9A84C]">Compassion,</span>
+            <br />
+            Excellence in Care
+          </h1>
+
+          <p className="text-lg text-[rgba(248,250,251,0.75)] leading-relaxed mb-10 max-w-xl">
+            Holy Trinity Hospital & Maternity Complex — delivering world-class medical care to Abakaliki and Ebonyi State. From routine consultations to complex procedures, your health is our mission.
+          </p>
+
+          {/* CTAs */}
+          <div className="flex flex-wrap gap-4 mb-14">
+            <Link href="/appointments" className="btn-gold">
+              <Icon name="CalendarDaysIcon" size={18} />
+              Book an Appointment
+            </Link>
+            <Link href="/departments" className="btn-outline-white">
+              Our Departments
+              <Icon name="ArrowRightIcon" size={16} />
+            </Link>
+          </div>
+
+          {/* Quick contact */}
+          <div className="flex flex-wrap gap-6">
+            <a
+              href="tel:08032763199"
+              className="flex items-center gap-3 group"
+            >
+              <div className="w-10 h-10 rounded-full bg-[rgba(13,115,119,0.3)] border border-[rgba(13,115,119,0.5)] flex items-center justify-center group-hover:bg-[#0D7377] transition-colors">
+                <Icon name="PhoneIcon" size={16} className="text-[#C9A84C]" />
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Trusted Locally</p>
-                <p className="font-display text-lg font-semibold text-foreground">5-Star Service</p>
+                <div className="text-xs text-[rgba(248,250,251,0.5)] uppercase tracking-wider">Call Us</div>
+                <div className="text-sm font-semibold text-[#F8FAFB]">08032763199</div>
               </div>
-            </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              "Best lawn on the block since we hired Stel. Professional, punctual, and the results speak for themselves."
-            </p>
-            <div className="flex items-center gap-1 mt-3">
-              {[0, 1, 2, 3, 4]?.map((i) =>
-              <Icon key={i} name="StarIcon" size={14} className="text-accent" variant="solid" />
-              )}
-              <span className="text-xs text-muted-foreground ml-1">Dave M., Conesville</span>
-            </div>
+            </a>
+            <a
+              href="tel:08059231822"
+              className="flex items-center gap-3 group"
+            >
+              <div className="w-10 h-10 rounded-full bg-[rgba(13,115,119,0.3)] border border-[rgba(13,115,119,0.5)] flex items-center justify-center group-hover:bg-[#0D7377] transition-colors">
+                <Icon name="PhoneIcon" size={16} className="text-[#C9A84C]" />
+              </div>
+              <div>
+                <div className="text-xs text-[rgba(248,250,251,0.5)] uppercase tracking-wider">Alternate</div>
+                <div className="text-sm font-semibold text-[#F8FAFB]">08059231822</div>
+              </div>
+            </a>
           </div>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-primary-foreground/50">
-        <span className="text-xs font-medium tracking-widest uppercase">Scroll</span>
-        <div className="w-px h-10 bg-gradient-to-b from-primary-foreground/40 to-transparent" />
+      {/* Bottom wave */}
+      <div className="absolute bottom-0 left-0 right-0">
+        <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <path d="M0 80L1440 80L1440 30C1200 70 960 10 720 40C480 70 240 10 0 30L0 80Z" fill="#F0F4F8"/>
+        </svg>
       </div>
-    </section>);
-
+    </section>
+  );
 }

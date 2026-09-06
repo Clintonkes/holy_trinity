@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Set or update the admin login credentials for Stel LLC.
+Set or update the admin login credentials for Holy Trinity Hospital.
 
 Usage:
     python backend/set_admin.py <email> <password>
 
 Examples:
-    python backend/set_admin.py stelllc1@proton.me mypassword123
+    python backend/set_admin.py info@holytrinityhospital.ng mypassword123
     python backend/set_admin.py newemail@example.com newpassword
 """
 
@@ -34,7 +34,7 @@ def describe_target(url: str) -> str:
 def main():
     if len(sys.argv) != 3:
         print("Usage: python set_admin.py <email> <password>")
-        print("Example: python set_admin.py stelllc1@proton.me mypassword123")
+        print("Example: python set_admin.py info@holytrinityhospital.ng mypassword123")
         sys.exit(1)
 
     email = sys.argv[1].strip()
