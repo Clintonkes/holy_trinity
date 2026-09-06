@@ -28,8 +28,9 @@ jobs:
         env:
           NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
           NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
-          # BASE_PATH is only needed when serving from a github.io/<repo>/ subpath
-          # rather than a custom domain at the root.
+          # The site is currently served from github.io/holy_trinity/.
+          # This prefixes Next.js CSS, JavaScript, fonts, and route links.
+          BASE_PATH: /holy_trinity
       - run: touch out/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
